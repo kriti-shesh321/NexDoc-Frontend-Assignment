@@ -98,6 +98,7 @@ export const ChatProvider: React.FC<{ initialChats?: Chat[]; children: React.Rea
     const removeAttachment = (id: string) => dispatch({ type: "REMOVE_ATTACHMENT", payload: { id } });
 
     const clearAttachments = () => dispatch({ type: "CLEAR_ATTACHMENTS" });
+    
     const sendMessage = (text: string) => {
         if (!state.activeChatId) return;
         dispatch({ type: "SEND_MESSAGE", payload: { text } });

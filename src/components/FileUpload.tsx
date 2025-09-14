@@ -12,6 +12,7 @@ import {
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { PaperClipIcon } from "@heroicons/react/16/solid";
 
 import type { AttachmentLocal } from "../types/definitions";
 
@@ -56,8 +57,9 @@ const FileUpload: React.FC<Props> = ({ attachments, onAdd, onRemove, onClearAll 
           triggerFilePicker();
           openPicker(e);
         }}
+        size="small"
       >
-        <AttachFileIcon style={{height: "18px", width: "auto"}}/>
+        <PaperClipIcon style={{ height: 20}} />
       </IconButton>
 
       <Popover
@@ -70,7 +72,9 @@ const FileUpload: React.FC<Props> = ({ attachments, onAdd, onRemove, onClearAll 
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1 }}>
           <Typography variant="subtitle2">Attached Files</Typography>
           <IconButton size="small" onClick={onClearAll} aria-label="clear all">
-            <DeleteOutlineIcon fontSize="small" />
+
+            <DeleteOutlineIcon fontSize="small" sx={{background:"#F8F9FC", color: "#0440CB" }}/>
+            <IconButton size="small" sx={{fontSize: "14px", background:"#F8F9FC", color: "#0440CB" }}>Add +</IconButton>
           </IconButton>
         </Box>
         <Divider />
@@ -86,9 +90,9 @@ const FileUpload: React.FC<Props> = ({ attachments, onAdd, onRemove, onClearAll 
                   primary={a.file.name}
                   secondary={a.sizeLabel}
                 />
-                  <IconButton edge="end" size="small" onClick={() => onRemove(a.id)} aria-label="remove">
-                    <RemoveCircleOutlineIcon />
-                  </IconButton>
+                <IconButton edge="end" size="small" onClick={() => onRemove(a.id)} aria-label="remove">
+                  <RemoveCircleOutlineIcon />
+                </IconButton>
               </ListItem>
             ))
           )}
