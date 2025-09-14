@@ -1,37 +1,25 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
-import {
-    Drawer,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    IconButton,
-    Toolbar,
-    Typography,
-    Box,
-    Container,
-} from "@mui/material";
-import {
-    ChevronLeft,
-    ChevronRight,
-} from "@mui/icons-material";
+import React, { useState } from 'react';
+import type { NavLinkType, Chat } from '../types/definitions';
+import { useChat } from "../context/ChatContext";
+
+import { Drawer, Container, Toolbar, IconButton, Box } from '@mui/material';
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+
+import Logo from './sidebar/Logo';
+import Search from './sidebar/Search';
+import NavLinks from './sidebar/NavLinks';
+import RecentChats from './sidebar/RecentChats';
+import TryPro from './sidebar/TryPro';
+import Profile from './sidebar/Profile';
+
 import {
     ChatBubbleOvalLeftEllipsisIcon as ChatIcon,
     FolderIcon,
     ClockIcon,
-    GlobeAmericasIcon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
+    GlobeAmericasIcon
 } from "@heroicons/react/16/solid";
-import logo from '../assets/sidebar/logo.svg';
-import logoText from '../assets/sidebar/logo-text.svg';
 
-
-const drawerWidth = 336;
-
-const navlinks = [
+const navlinks: NavLinkType[] = [
     {
         text: "Home",
         icon: <ChatIcon />,
@@ -58,78 +46,58 @@ const navlinks = [
     }
 ];
 
-const Sidebar: React.FC = () => {
-    const [open, setOpen] = useState(true);
+const drawerWidth = 336;
 
-    const toggleDrawer = () => {
-        setOpen(!open);
-    };
+const Sidebar: React.FC = () => {
+    const { state } = useChat();
+    const chats: Chat[] = state && state.chats;
+
+    const [open, setOpen] = useState(true);
+    const [query, setQuery] = useState('');
+
+    const toggleDrawer = () => setOpen((prevState) => !prevState);
 
     return (
         <Drawer
             variant="permanent"
             open={open}
             sx={{
-                width: open ? drawerWidth : 100,
+                height: "100%",
+                width: open ? drawerWidth : 90,
                 flexShrink: 0,
-                justifyContent: 'center',
-                padding: 0,
-                "& .MuiDrawer-paper": {
-                    width: open ? drawerWidth : 100,
-                    boxSizing: "border-box",
-                    transition: "width 0.3s",
+                '& .MuiDrawer-paper': {
+                    width: open ? drawerWidth : 90,
+                    transition: 'width 0.3s',
                     backgroundColor: '#F8F9FC',
+                    borderRight: open ? 'none' : "0.5",
                 },
             }}
         >
-            <Container>
-                <Toolbar
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: open ? "space-between" : "center",
-                        px: 1,
-                    }}
-                >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: open ? 1 : 0 }}>
-                        <img src={logo} alt="Logo" style={{ width: 36, height: 36 }} />
+            <Container sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', py: 2, justifyContent: "space-between" }}>
+                <Box>
+                    <Toolbar disableGutters sx={{ display: 'flex', alignItems: 'center', justifyContent: open ? 'space-between' : 'center' }}>
+                        <Logo open={open} />
+                        <IconButton onClick={toggleDrawer} size="small">
+                            {open ? <ChevronLeft /> : <ChevronRight />}
+                        </IconButton>
+                    </Toolbar>
 
-                        {open &&
-                            <img src={logoText} alt="Logo Text" style={{ height: 28 }} />
-                        }
-                    </Box>
-                    <IconButton onClick={toggleDrawer}>
-                        {open ? <ChevronLeft /> : <ChevronRight />}
-                    </IconButton>
-                </Toolbar>
+                    <Search open={open} value={query} onChange={setQuery} />
 
-                <List>
-                    {navlinks.map((item, index) => (
-                        <ListItem key={index}>
-                            <ListItemButton
-                                component={NavLink}
-                                to={item.link}
-                                sx={{
-                                    '&.active': {
-                                        border: '4px solid',
-                                        borderColor: '#F3F3F3',
-                                        borderRadius: '20px',
-                                    },
-                                    px: 2,
-                                }}
-                            >
-                                <ListItemIcon sx={{ width: '24px', height: '24px', color: '#989898' }}>
-                                    {item.icon}
-                                </ListItemIcon>
-                                {open && <ListItemText primary={item.text} sx={{fontSize: '16px'}} />}
-                                {open && <Typography sx={{ fontSize: '14px', color: '#515151', padding: 0.5, backgroundColor: '#F3F3F3', borderRadius: '3px' }}>{item.caption}</Typography>}
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
+                    <NavLinks open={open} links={navlinks} />
+
+                    {open && <RecentChats open={open} chats={chats} query={query} />}
+
+                </Box>
+
+                <Box>
+                    <TryPro open={open} />
+                    <Profile open={open} />
+                </Box>
             </Container>
         </Drawer>
     );
 };
+
 
 export default Sidebar;
