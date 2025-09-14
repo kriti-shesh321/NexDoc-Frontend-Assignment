@@ -19,7 +19,7 @@ const Hero: React.FC<Props> = ({ onPick }) => {
 
             <Grid container spacing={2}>
                 {prompts.map((p) => (
-                    <Grid component={String} key={p.id} item size={4} >
+                    <Grid key={p.id} item size={4} >
                         <Paper
                             role="button"
                             tabIndex={0}
